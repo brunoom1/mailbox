@@ -12,13 +12,15 @@ class Client {
 
   open (config, accountIndex = 0, box = DEFAULT_BOX) {
 
-    if (!config) throw 'config is not defined';
+    if (!config && !this.config) throw 'config is not defined';
 
-    this.accounts = config.imap.map(account_config => {
+    if (!this.config && config) {
+      this.config = config;
+    }
+
+    this.accounts = this.config.imap.map(account_config => {
       return new Imap(account_config);
     });
-
-    this.config = config;
 
     return this;
   }
